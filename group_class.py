@@ -9,20 +9,38 @@ class Word: #models words. inputs will actually be integers. see group class for
         self.word = tuple(t)
         self.length = len(t)
         self.gens = max(abs(n) for n in t) #number of generators used
-        self.str = "".join([str(x) for x in t]) #useful for subword calculations
+
+    def is_subword(self,other): #checks if self is subword of other
+        if other.length < self.length:
+            return False
+        for i in range(0, other.length - self.length + 1):
+            if self.word == other.word[i: i + self.length]:
+                return True #match found
+        return False #all subwords don't match
 
     def __repr__(self):
         return self.word.__repr__()
-
-    def __mul__(self, other): #performs the free product of both elements
+    
+    def reduce(self): #turns the word into a reduced one. Other operations reduce the word too
+        reduced_self = []
+        i = 0
+        for x in self.word:
+            if reduced_self and reduced_self[-1] == -x:
+                reduced_self.pop()
+            else:
+                reduced_self.append(x)
+        return Word(reduced_self)
+                
+    def __mul__(self, other): #performs the free product of both elements, result is reduced if both self and other are reduced
         length = min(len(self.word), len(other.word))
         x, y = self.word, other.word
         for i in range(0,length):
-            if self.word[-i-1] == -other.word[i]:
+            if self.word[-1-i] == -other.word[i]:
                 x, y = x[:-1], y[1:]
             else:
                 return Word(x+y)
         return Word(x+y)
+    
             
     def inv(self): #inverses
         return Word([-self.word[self.length-1-i] for i in range(0,self.length)])
@@ -30,8 +48,13 @@ class Word: #models words. inputs will actually be integers. see group class for
     def conj(self, other): #conjugates self by other
         return other.inv() * self * other
     
-    def is_subword(self,other): #checks if self is subword of other
-        return self.str in other.str
+    def pow(self, n: int):
+        if n == 0:
+            return Word([])
+        elif n > 0:
+            return self * self.pow(n-1)
+        elif n < 0:
+            return self.inv() * self.pow(n+1)
 
 
 class Group: #This group class is defined from a presentation
@@ -90,3 +113,6 @@ class Group: #This group class is defined from a presentation
     def add_relation(self, relation):
         self.relations.append(relation)
     
+class FreeGroup(Group):
+    def __init__(self, num_gens):
+        super.__init__(num_gens, [])
