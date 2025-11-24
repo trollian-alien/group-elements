@@ -1,4 +1,4 @@
-from group_class import Word
+from word_class import Word
 import unittest
 
 class TestWord(unittest.TestCase):
