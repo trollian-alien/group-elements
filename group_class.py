@@ -26,24 +26,24 @@ class Group: #This group class is defined from a presentation
                 return False
             last_value = x
         return True 
-
-    def produce_relators(self):
-        pass
+    
+    #Now for a lot of palceholder for what's to come ;)
+    def produce_relators(self, limit):
+        return set()
 
     def is_relator(self, r): #checks if r is a relator
         #this is the word problem, unsolvable in general lol, but we can get partial detections by using the partial relation generator
-        pass
+        return  2 == 2
 
     def reduce(self, element):
-        #removes substrings that are in self.more_relations
+        #removes substrings that are in self.more_relations, so it doesn't catch them all!
         pass
 
     def mu(self, elem1, elem2): 
-        #without a suitable 
-        result = elem1 * elem2 
+        return self.reduce(elem1 * elem2)
     
     def inv(self, element):
-        result = element.inv()
+        return element.inv()
 
 
     # Tietze Operations; to be finished
@@ -60,3 +60,12 @@ class Group: #This group class is defined from a presentation
 class FreeGroup(Group):
     def __init__(self, num_gens):
         super.__init__(num_gens, [])
+
+    def produce_relators(self, limit):
+        return set() #there are no relators smh
+    
+    def is_relator(self, r):
+        return len(r.reduce()) == 0
+    
+    def reduce(self, element):
+        return element.reduce()
