@@ -3,8 +3,13 @@ from group_class import Word
 def num_gens_used(words): #number of generators used by a list of Words
     return max([word.gens for word in words])
 
-def subtups(tup, n): # lists all subtuples of length n
-    pass
+def subtups(lst, length): #output: set of all lists of length up to length formed from elements of lst
+    lists = [[x] for x in lst]
+    for i in range(1, length):
+        for l in lists:
+            for x in lst:
+                lists.append(l+[x])
+    return set(lists)
 
 def normal_subgroup_generated_by_words(words, num_gens, limit): #input: list of Words and number of generators, and a limit to the length of the words in the resturned list
     if num_gens_used(words) > num_gens:
